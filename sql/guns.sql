@@ -1,7 +1,7 @@
-DROP DATABASE IF EXISTS guns;
-CREATE DATABASE IF NOT EXISTS guns DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+DROP DATABASE IF EXISTS dk;
+CREATE DATABASE IF NOT EXISTS dk DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 
-USE guns;
+USE dk;
 
 /*
  Navicat MySQL Data Transfer
@@ -10,7 +10,7 @@ USE guns;
  Source Server Type    : MySQL
  Source Server Version : 50723
  Source Host           : localhost:3306
- Source Schema         : guns
+ Source Schema         : dk
 
  Target Server Type    : MySQL
  Target Server Version : 50723
@@ -253,7 +253,7 @@ CREATE TABLE `sys_notice`  (
 -- ----------------------------
 -- Records of sys_notice
 -- ----------------------------
-INSERT INTO `sys_notice` VALUES (6, '欢迎', 'hi，Guns旗舰版发布了！', '2017-01-11 08:53:20', 1, '2018-12-28 23:24:48', 1);
+INSERT INTO `sys_notice` VALUES (6, '欢迎', 'hi，dk旗舰版发布了！', '2017-01-11 08:53:20', 1, '2018-12-28 23:24:48', 1);
 INSERT INTO `sys_notice` VALUES (8, '你好', '你好，世界！', '2017-05-10 19:28:57', 1, '2018-12-28 23:28:26', 1);
 
 -- ----------------------------

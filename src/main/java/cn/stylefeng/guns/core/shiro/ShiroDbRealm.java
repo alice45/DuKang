@@ -19,6 +19,7 @@ import cn.stylefeng.guns.core.shiro.service.UserAuthService;
 import cn.stylefeng.guns.core.shiro.service.impl.UserAuthServiceServiceImpl;
 import cn.stylefeng.guns.modular.system.entity.User;
 import cn.stylefeng.roses.core.util.ToolUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -34,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 public class ShiroDbRealm extends AuthorizingRealm {
 
     /**
@@ -89,5 +91,11 @@ public class ShiroDbRealm extends AuthorizingRealm {
         md5CredentialsMatcher.setHashAlgorithmName(ShiroKit.hashAlgorithmName);
         md5CredentialsMatcher.setHashIterations(ShiroKit.hashIterations);
         super.setCredentialsMatcher(md5CredentialsMatcher);
+    }
+
+
+    @Override
+    protected void assertCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) throws AuthenticationException {
+        log.info("登录信息:{},{}", token, info);
     }
 }
