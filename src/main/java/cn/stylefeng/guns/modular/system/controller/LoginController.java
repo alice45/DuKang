@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
+import static cn.stylefeng.guns.core.common.constant.cookies.CookiesConst.USER_NAME;
 import static cn.stylefeng.roses.core.util.HttpContext.getIp;
 
 /**
@@ -78,7 +79,7 @@ public class LoginController extends BaseController {
      * @Date 2018/12/23 5:41 PM
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(Model model) {
         if (ShiroKit.isAuthenticated() || ShiroKit.getUser() != null) {
             return REDIRECT + "/";
         } else {
