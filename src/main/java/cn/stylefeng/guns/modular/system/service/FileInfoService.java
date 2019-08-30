@@ -12,6 +12,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Encoder;
+
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * <p>
@@ -53,4 +58,33 @@ public class FileInfoService extends ServiceImpl<FileInfoMapper, FileInfo> {
         user.setAvatar(fileInfo.getFileId());
         userService.updateById(user);
     }
+
+    /**
+    *上传头像
+    *@date 2019/8/29
+    *@author yangt
+    */
+    public void uploadImg(MultipartFile multipartFile) {
+        if (multipartFile == null) {
+            return;
+        }
+        ShiroUser currentUser = ShiroKit.getUser();
+        Optional.ofNullable(currentUser).orElseThrow(() -> new ServiceException(CoreExceptionEnum.NO_CURRENT_USER));
+
+        BASE64Encoder base64Encoder = new BASE64Encoder();
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setFileId(IdWorker.getIdStr());
+        try {
+            fileInfo.setFileData(base64Encoder.encode(multipartFile.getBytes()));
+        } catch (IOException e) {
+            throw new ServiceException(CoreExceptionEnum.ENCRYPT_ERROR);
+        }
+        this.save(fileInfo);
+
+        //更新用户的头像
+        User user = userService.getById(currentUser.getId());
+        user.setAvatar(fileInfo.getFileId());
+        userService.updateById(user);
+    }
+
 }

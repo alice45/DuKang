@@ -31,12 +31,14 @@ layui.use(['form', 'upload', 'element', 'ax', 'laydate'], function () {
 
     upload.render({
         elem: '#imgHead',
-        url: '', // 上传接口
+        url: '/upload/img', // 上传接口
         done: function (res) {
             // 上传完毕回调
+            $('#imgHead img').attr('src',  '/system/previewAvatar?a=' + Math.random());
         },
         error: function () {
             // 请求异常回调
+            console.log(res);
         }
     });
 });

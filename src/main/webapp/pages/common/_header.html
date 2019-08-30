@@ -1,9 +1,11 @@
 @/* 框架顶部 */
 <div class="layui-header">
-    <div class="layui-logo">
-        <!--<img src="${ctxPath}/assets/common/images/logo.png"/>-->
-        <i class="layui-icon layui-icon-component"></i>
-        <cite>&nbsp;${systemName}&emsp;</cite>
+    <div class="layui-logo" lay-filter="admin-side-nav" >
+        <a lay-href="/system/console">
+            <img src="${ctxPath}/assets/expand/images/left.png"/>
+            <!--<i class="layui-icon layui-icon-component"></i>-->
+            <cite>${systemName}&emsp;</cite>
+        </a>
     </div>
     <ul class="layui-nav layui-layout-left">
         <li class="layui-nav-item" lay-unselect>
@@ -22,7 +24,7 @@
         </li>
         <li class="layui-nav-item" lay-unselect>
             <a>
-                <img src="${avatar!}" class="layui-nav-img">
+                <img src="${avatar!}" class="layui-nav-img" id="navHead">
                 <cite>${name!"用户"}</cite>
             </a>
             <dl class="layui-nav-child">

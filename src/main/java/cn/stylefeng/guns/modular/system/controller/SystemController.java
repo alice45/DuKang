@@ -39,6 +39,7 @@ import cn.stylefeng.roses.kernel.model.exception.RequestEmptyException;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -85,6 +86,7 @@ public class SystemController extends BaseController {
      * @author fengshuonan
      * @Date 2018/12/24 22:43
      */
+    @ApiOperation(value = "控制台")
     @RequestMapping("/console")
     public String console() {
         return "/modular/frame/console.html";

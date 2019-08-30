@@ -54,8 +54,6 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("Alice")
                 .description("Alice文档")
-                .termsOfServiceUrl("https://gitee.com/stylefeng/guns")
-                .contact(new Contact("stylefeng", "https://gitee.com/stylefeng/guns", ""))
                 .version("2.0")
                 .build();
     }
