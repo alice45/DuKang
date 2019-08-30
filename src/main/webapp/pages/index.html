@@ -77,9 +77,16 @@
             layer.confirm('确定退出登录？', {
                 skin: 'layui-layer-admin'
             }, function () {
-                $.get('/cache/clear',function (data) {
-                    console.log('清除缓存');
-                    window.location.href = "${ctxPath}/logout";
+                $.ajax({
+                    url: "/cache/clear",
+                    type: "get",
+                    dataType: "json",
+                    cache: false,
+                    async: true,
+                    success: function () {
+                        console.log('清除缓存');
+                        window.location.href = "${ctxPath}/logout";
+                    }
                 });
             });
         });

@@ -117,9 +117,9 @@ public class UserAuthServiceServiceImpl implements UserAuthService {
     @Override
     public SimpleAuthenticationInfo info() {
         ShiroUser shiroUser = ShiroKit.getUser();
+        String account = shiroUser.getAccount();
         String name = shiroUser.getName();
-        UserAuthService authService = UserAuthServiceServiceImpl.me();
-        User user = authService.user(name);
+        User user = this.user(account);
         return this.info(shiroUser, user, name);
     }
 }
