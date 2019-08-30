@@ -17,8 +17,10 @@ package cn.stylefeng.guns.core.shiro;
 
 import cn.stylefeng.guns.core.shiro.service.UserAuthService;
 import cn.stylefeng.guns.core.shiro.service.impl.UserAuthServiceServiceImpl;
+import cn.stylefeng.guns.core.util.CacheUtil;
 import cn.stylefeng.guns.modular.system.entity.User;
 import cn.stylefeng.roses.core.util.ToolUtil;
+import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -34,6 +36,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static cn.stylefeng.guns.core.common.constant.cache.CacheKey.LOGIN_USER;
+import static cn.stylefeng.guns.core.common.exception.BizExceptionEnum.USER_HAS_LOGIN;
 
 @Slf4j
 public class ShiroDbRealm extends AuthorizingRealm {
@@ -97,5 +102,10 @@ public class ShiroDbRealm extends AuthorizingRealm {
     @Override
     protected void assertCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) throws AuthenticationException {
         log.info("登录信息:{},{}", token, info);
+        String userKey = String.valueOf(info.getCredentials());
+        if (CacheUtil.get(LOGIN_USER, userKey) != null) {
+            throw new ServiceException(USER_HAS_LOGIN);
+        }
+        CacheUtil.put(LOGIN_USER, userKey, 1);
     }
 }

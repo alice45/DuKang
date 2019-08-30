@@ -62,4 +62,6 @@ public interface UserAuthService {
      */
     SimpleAuthenticationInfo info(ShiroUser shiroUser, User user, String realmName);
 
+    SimpleAuthenticationInfo info();
+
 }

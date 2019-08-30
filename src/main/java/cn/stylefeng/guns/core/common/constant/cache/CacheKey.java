@@ -43,4 +43,8 @@ public interface CacheKey {
      */
     String DEPT_NAME = "dept_name_";
 
+    /**
+     * 登录限制
+     */
+    String LOGIN_USER = "login_user_";
 }

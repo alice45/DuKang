@@ -114,4 +114,12 @@ public class UserAuthServiceServiceImpl implements UserAuthService {
         return new SimpleAuthenticationInfo(shiroUser, credentials, credentialsSalt, realmName);
     }
 
+    @Override
+    public SimpleAuthenticationInfo info() {
+        ShiroUser shiroUser = ShiroKit.getUser();
+        String name = shiroUser.getName();
+        UserAuthService authService = UserAuthServiceServiceImpl.me();
+        User user = authService.user(name);
+        return this.info(shiroUser, user, name);
+    }
 }

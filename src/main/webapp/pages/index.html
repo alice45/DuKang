@@ -50,6 +50,7 @@
 <script>
     layui.use(['layer', 'element', 'admin', 'index'], function () {
         var $ = layui.jquery;
+        var $aj = layui.ax;
         var layer = layui.layer;
         var admin = layui.admin;
         var index = layui.index;
@@ -76,7 +77,10 @@
             layer.confirm('确定退出登录？', {
                 skin: 'layui-layer-admin'
             }, function () {
-                window.location.href = "${ctxPath}/logout";
+                $.get('/cache/clear',function (data) {
+                    console.log('清除缓存');
+                    window.location.href = "${ctxPath}/logout";
+                });
             });
         });
     });

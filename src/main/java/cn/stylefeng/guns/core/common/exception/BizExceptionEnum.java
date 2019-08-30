@@ -60,6 +60,8 @@ public enum BizExceptionEnum implements AbstractBaseExceptionEnum {
     ACCOUNT_FREEZED(401, "账号被冻结"),
     OLD_PWD_NOT_RIGHT(402, "原密码不正确"),
     TWO_PWD_NOT_MATCH(405, "两次输入密码不一致"),
+    USER_HAS_LOGIN(406, "用户正在登录中，小心顺着网线来找你哦"),
+    USER_ERROR_LOGIN_OUT(406, "退出失败,无法获取Token"),
 
     /**
      * 错误的请求
