@@ -95,29 +95,30 @@
         //基础配置
         layim.config({
             init: {
-                "mine": {
-                    "username": "纸飞机" //我的昵称
-                    ,"id": "100000" //我的ID
-                    ,"status": "online" //在线状态 online：在线、hide：隐身
-                    ,"sign": "在深邃的编码世界，做一枚轻盈的纸飞机" //我的签名
-                    ,"avatar": "${ctxPath}/system/previewAvatar" //我的头像
-                },
-
-            friend: [
-            {
-                "groupname": "知名人物",
-                "id": 0,
-                "list": [
-                    {
-                        "username": "山根万理奈",
-                        "id": "100001",
-                        "avatar": "http://p1.music.126.net/zGJ7wadxSIlSB5lhqzIteQ==/109951164189359377.jpg?param=180y180",
-                        "sign": "嘻嘻",
-                        "status": "online"
-                    }
-                ]
-            }
-        ]
+                url : '/role/init'
+        //         "mine": {
+        //             "username": "纸飞机" //我的昵称
+        //             ,"id": "100000" //我的ID
+        //             ,"status": "online" //在线状态 online：在线、hide：隐身
+        //             ,"sign": "在深邃的编码世界，做一枚轻盈的纸飞机" //我的签名
+        //             ,"avatar": "${ctxPath}/system/previewAvatar" //我的头像
+        //         },
+        //
+        //     friend: [
+        //     {
+        //         "groupname": "知名人物",
+        //         "id": 0,
+        //         "list": [
+        //             {
+        //                 "username": "山根万理奈",
+        //                 "id": "100001",
+        //                 "avatar": "http://p1.music.126.net/zGJ7wadxSIlSB5lhqzIteQ==/109951164189359377.jpg?param=180y180",
+        //                 "sign": "嘻嘻",
+        //                 "status": "online"
+        //             }
+        //         ]
+        //     }
+        // ]
             }, //获取主面板列表信息，下文会做进一步介绍
 
             title: '小铺子',
@@ -161,15 +162,16 @@
             console.log(ev);
         };
         socket.onmessage = function (ev) {
+            var data = ev.data.split(":");
             layim.getMessage({
-                username: "山根万理奈" //消息来源用户名
+                username: data[3] //消息来源用户名
                 ,avatar: "http://p1.music.126.net/zGJ7wadxSIlSB5lhqzIteQ==/109951164189359377.jpg?param=180y180" //消息来源用户头像
-                ,id: "100001" //消息的来源ID（如果是私聊，则是用户id，如果是群聊，则是群组id）
+                ,id: data[1] //消息的来源ID（如果是私聊，则是用户id，如果是群聊，则是群组id）
                 ,type: "friend" //聊天窗口来源类型，从发送消息传递的to里面获取
-                ,content: ev.data //消息内容
+                ,content: data[2] //消息内容
                 ,cid: 0 //消息id，可不传。除非你要对消息进行一些操作（如撤回）
                 ,mine: false //是否我发送的消息，如果为true，则会显示在右方
-                ,fromid: "100000" //消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
+                ,fromid: data[0] //消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
                 ,timestamp: new Date().getTime() //服务端时间戳毫秒数。注意：如果你返回的是标准的 unix 时间戳，记得要 *1000
             });
         };
@@ -183,7 +185,7 @@
         }
 
        layim.on('sendMessage', function (res) {
-           socket.send(res.mine.content);
+           socket.send(JSON.stringify(res));
        })
 
 

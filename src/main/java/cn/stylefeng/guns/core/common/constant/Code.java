@@ -2,8 +2,8 @@ package cn.stylefeng.guns.core.common.constant;
 
 public interface Code {
 
-    Integer SUCCESS = 200;
+    Integer SUCCESS = 0;
 
-    String SUCCESS_MSG = "success";
+    String SUCCESS_MSG = "";
 
 }

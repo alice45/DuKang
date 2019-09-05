@@ -26,9 +26,13 @@ import cn.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import cn.stylefeng.guns.core.common.node.ZTreeNode;
 import cn.stylefeng.guns.core.common.page.LayuiPageFactory;
 import cn.stylefeng.guns.core.log.LogObjectHolder;
+import cn.stylefeng.guns.core.shiro.ShiroKit;
+import cn.stylefeng.guns.core.shiro.ShiroUser;
+import cn.stylefeng.guns.modular.system.entity.MsgUser;
 import cn.stylefeng.guns.modular.system.entity.Role;
 import cn.stylefeng.guns.modular.system.entity.User;
 import cn.stylefeng.guns.modular.system.model.RoleDto;
+import cn.stylefeng.guns.modular.system.model.response.SimpleResponse;
 import cn.stylefeng.guns.modular.system.service.RoleService;
 import cn.stylefeng.guns.modular.system.service.UserService;
 import cn.stylefeng.guns.modular.system.warpper.RoleWrapper;
@@ -40,10 +44,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -266,4 +267,14 @@ public class RoleController extends BaseController {
         }
     }
 
+    @GetMapping("init")
+    @ResponseBody
+    public SimpleResponse init() {
+        boolean yangt = ShiroKit.getUser().getAccount().equals("yangt");
+        if (yangt) {
+            return SimpleResponse.success(MsgUser.me());
+        }else {
+            return SimpleResponse.success(MsgUser.your());
+        }
+    }
 }

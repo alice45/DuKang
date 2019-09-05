@@ -1,30 +1,32 @@
 package cn.stylefeng.guns.core.ws.bean;
 
-import cn.stylefeng.guns.core.util.HttpClientUtils;
-import com.arronlong.httpclientutil.HttpClientUtil;
-import com.arronlong.httpclientutil.common.HttpConfig;
+import cn.stylefeng.guns.core.shiro.ShiroKit;
+import cn.stylefeng.guns.core.shiro.ShiroUser;
+import cn.stylefeng.guns.modular.system.entity.User;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.exception.HttpProcessException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.*;
+import java.security.Principal;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Slf4j
 @ServerEndpoint(value = "/websocket") //接受websocket请求路径
 @Component
 public class MyWebSocket {
 
-    public static final String URL = "http://i.xiaoi.com/robot/webrobot";
+//    public static final String URL = "http://i.xiaoi.com/robot/webrobot";
 
-    public static final List<String> cookies = new ArrayList<>();
+//    public static final List<String> cookies = new ArrayList<>();
 
     //保存所有在线socket连接
     private static Map<String, MyWebSocket> webSocketMap = new LinkedHashMap<>();
@@ -36,19 +38,20 @@ public class MyWebSocket {
     private Session session;
 
 
-    static {
-        cookies.add("cnonce=808116;sig=0c3021aa5552fe597bb55448b40ad2a90d2dead5;XISESSIONID=hlbnd1oiwar01dfje825gavcn;nonce=273765;hibext_instdsigdip2=1;");
-        cookies.add("sig=0c3021aa5552fe597bb55448b40ad2a90d2dead5");
-        cookies.add("XISESSIONID=hlbnd1oiwar01dfje825gavcn");
-        cookies.add("nonce=273765");
-        cookies.add("hibext_instdsigdip2=1");
-    }
+//    static {
+//        cookies.add("cnonce=808116;sig=0c3021aa5552fe597bb55448b40ad2a90d2dead5;XISESSIONID=hlbnd1oiwar01dfje825gavcn;nonce=273765;hibext_instdsigdip2=1;");
+//        cookies.add("sig=0c3021aa5552fe597bb55448b40ad2a90d2dead5");
+//        cookies.add("XISESSIONID=hlbnd1oiwar01dfje825gavcn");
+//        cookies.add("nonce=273765");
+//        cookies.add("hibext_instdsigdip2=1");
+//    }
 
     //处理连接建立
     @OnOpen
     public void onOpen(Session session){
         this.session=session;
-        webSocketMap.put(session.getId(),this);
+        String id = StringUtils.substringBetween(session.getUserPrincipal().getName(), "id=", ",");
+        webSocketMap.put(id, this);
         addCount();
         log.info("新的连接加入：{}",session.getId());
     }
@@ -58,30 +61,29 @@ public class MyWebSocket {
     public void onMessage(String message,Session session){
         log.info("收到客户端{}消息：{}",session.getId(),message);
         try{
-
-//            HttpHeaders httpHeaders = new HttpHeaders();
-//            httpHeaders.put("cookies", cookies);
-//            HttpEntity<String> requestEntity = new HttpEntity<String>(null, httpHeaders);
-//            Map<String, Object> params = new HashMap<>();
-//            ResponseEntity<String> exchange = restTemplate.exchange(relallyUrl, HttpMethod.GET, requestEntity, String.class, params);
-//            String body = exchange.getBody();
-            this.sendMessage(getReply("123"));
+            Msg msg = JSONObject.parseObject(message, Msg.class);
+            String targetId = msg.getTo().getId();
+            String name = msg.getTo().getUsername();
+            String sourceId = msg.getMine().getId();
+            String content = msg.getMine().getContent();
+            MyWebSocket socket = webSocketMap.get(targetId);
+            socket.sendMessage(targetId+":"+sourceId+":"+content + ":" + name);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     private String getReply(String message) {
-        Map<String, Object> param = new HashMap<>(8);
-        String data = "{'sessionId':'09e2aca4d0a541f88eecc77c03a8b393','robotId':'webbot','userId':'462d49d3742745bb98f7538c42f9f874','body':{'content':'" + message + "'}," + "'type':'txt'}";
-        param.put("callback", "__webrobot_processMsg");
-        param.put("data", data);
-        param.put("ts", "1529917589648");
-        try {
-            String s = HttpClientUtils.get(URL, param, obtainHeader());
-        } catch (Exception e) {
-            log.info("调用回复接口错误", e);
-        }
+//        Map<String, Object> param = new HashMap<>(8);
+//        String data = "{'sessionId':'09e2aca4d0a541f88eecc77c03a8b393','robotId':'webbot','userId':'462d49d3742745bb98f7538c42f9f874','body':{'content':'" + message + "'}," + "'type':'txt'}";
+//        param.put("callback", "__webrobot_processMsg");
+//        param.put("data", data);
+//        param.put("ts", "1529917589648");
+//        try {
+//            String s = HttpClientUtils.get(URL, param, obtainHeader());
+//        } catch (Exception e) {
+//            log.info("调用回复接口错误", e);
+//        }
         return "嗷哦~";
     }
 
@@ -104,7 +106,8 @@ public class MyWebSocket {
     //处理连接关闭
     @OnClose
     public void onClose(){
-        webSocketMap.remove(this.session.getId());
+        String id = StringUtils.substringBetween(session.getUserPrincipal().getName(), "id=", ",");
+        webSocketMap.remove(id);
         reduceCount();
         log.info("连接关闭:{}",this.session.getId());
     }
