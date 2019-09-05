@@ -48,12 +48,13 @@
 <script type="text/javascript" src="${ctxPath}/assets/common/js/common.js"></script>
 
 <script>
-    layui.use(['layer', 'element', 'admin', 'index'], function () {
+    layui.use(['layer', 'element', 'admin', 'index', 'layim'], function () {
         var $ = layui.jquery;
         var $aj = layui.ax;
         var layer = layui.layer;
         var admin = layui.admin;
         var index = layui.index;
+        var layim = layui.layim;
 
         // 默认加载主页
         index.loadHome({
@@ -90,7 +91,104 @@
                 });
             });
         });
+
+        //基础配置
+        layim.config({
+            init: {
+                "mine": {
+                    "username": "纸飞机" //我的昵称
+                    ,"id": "100000" //我的ID
+                    ,"status": "online" //在线状态 online：在线、hide：隐身
+                    ,"sign": "在深邃的编码世界，做一枚轻盈的纸飞机" //我的签名
+                    ,"avatar": "${ctxPath}/system/previewAvatar" //我的头像
+                },
+
+            friend: [
+            {
+                "groupname": "知名人物",
+                "id": 0,
+                "list": [
+                    {
+                        "username": "山根万理奈",
+                        "id": "100001",
+                        "avatar": "http://p1.music.126.net/zGJ7wadxSIlSB5lhqzIteQ==/109951164189359377.jpg?param=180y180",
+                        "sign": "嘻嘻",
+                        "status": "online"
+                    }
+                ]
+            }
+        ]
+            }, //获取主面板列表信息，下文会做进一步介绍
+
+            title: '小铺子',
+            notice: true,
+            isgroup: false,
+
+            //上传图片接口（返回的数据格式见下文）
+            uploadImage: {
+                url: '' //接口地址
+                ,type: 'post' //默认post
+            }
+
+            //上传文件接口（返回的数据格式见下文）
+            ,uploadFile: {
+                url: '' //接口地址
+                ,type: 'post' //默认post
+            }
+
+            //扩展“更多”的自定义列表，下文会做进一步介绍（如果无需扩展，剔除该项即可）
+            ,moreList: [{
+                alias: 'find'
+                ,title: '发现'
+                ,iconUnicode: '&#xe628;' //图标字体的unicode，可不填
+                ,iconClass: '' //图标字体的class类名
+            }]
+
+            //扩展工具栏，下文会做进一步介绍（如果无需扩展，剔除该项即可）
+            // ,tool: [{
+            //     alias: 'code' //工具别名
+            //     ,title: '代码' //工具名称
+            //     ,iconUnicode: '&#xe64e;' //工具图标，参考图标文档，可不填
+            //     ,iconClass: '' //图标字体的class类名
+            // }]
+        });
+
+        var socket = new WebSocket("ws://localhost:9090/websocket");
+        socket.onerror = function (ev) {
+            console.log(ev);
+        };
+        socket.onopen = function (ev) {
+            console.log(ev);
+        };
+        socket.onmessage = function (ev) {
+            layim.getMessage({
+                username: "山根万理奈" //消息来源用户名
+                ,avatar: "http://p1.music.126.net/zGJ7wadxSIlSB5lhqzIteQ==/109951164189359377.jpg?param=180y180" //消息来源用户头像
+                ,id: "100001" //消息的来源ID（如果是私聊，则是用户id，如果是群聊，则是群组id）
+                ,type: "friend" //聊天窗口来源类型，从发送消息传递的to里面获取
+                ,content: ev.data //消息内容
+                ,cid: 0 //消息id，可不传。除非你要对消息进行一些操作（如撤回）
+                ,mine: false //是否我发送的消息，如果为true，则会显示在右方
+                ,fromid: "100000" //消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
+                ,timestamp: new Date().getTime() //服务端时间戳毫秒数。注意：如果你返回的是标准的 unix 时间戳，记得要 *1000
+            });
+        };
+        socket.onclose = function (ev) {
+            console.log('连接关闭');
+        };
+
+        function sendMessage() {
+            if (socket.readyState === 1) socket.send("这是一个测试数据");
+            else alert("尚未建立websocket连接");
+        }
+
+       layim.on('sendMessage', function (res) {
+           socket.send(res.mine.content);
+       })
+
+
     });
+
 </script>
 </body>
 
