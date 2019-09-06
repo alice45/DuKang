@@ -47,4 +47,10 @@ public interface CacheKey {
      * 登录限制
      */
     String LOGIN_USER = "login_user_";
+
+
+    /**
+     * 登录限制人数
+     */
+    String LOGIN_USER_COUNT = "login_user_count";
 }

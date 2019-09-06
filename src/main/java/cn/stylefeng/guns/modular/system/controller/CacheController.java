@@ -8,7 +8,9 @@ import cn.stylefeng.guns.core.util.CacheUtil;
 import cn.stylefeng.guns.modular.system.entity.User;
 import cn.stylefeng.guns.modular.system.model.response.SimpleResponse;
 import cn.stylefeng.roses.core.base.controller.BaseController;
+import cn.stylefeng.roses.core.util.SpringContextHolder;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
+import net.sf.ehcache.CacheManager;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,12 @@ import static cn.stylefeng.guns.core.common.exception.BizExceptionEnum.USER_ERRO
 @RequestMapping("/cache")
 public class CacheController extends BaseController {
 
+    @RequestMapping("count")
+    @ResponseBody
+    public String userCount() {
+        CacheManager cacheManager = SpringContextHolder.getBean(CacheManager.class);
+        return SimpleResponse.successJson(Optional.ofNullable(cacheManager.getCache(LOGIN_USER)).map(x -> x.getSize()).orElse(0));
+    }
 
 
     @RequestMapping("clear")
@@ -32,7 +40,6 @@ public class CacheController extends BaseController {
         Optional.ofNullable(authenticationInfo).orElseThrow(() -> new ServiceException(USER_ERROR_LOGIN_OUT));
         String userKey = String.valueOf(authenticationInfo.getCredentials());
         CacheUtil.remove(LOGIN_USER, userKey);
-        ShiroKit.getSubject().logout();
         return SimpleResponse.successJson();
     }
 

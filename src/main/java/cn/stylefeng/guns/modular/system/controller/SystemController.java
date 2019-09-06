@@ -34,6 +34,7 @@ import cn.stylefeng.guns.modular.system.service.NoticeService;
 import cn.stylefeng.guns.modular.system.service.UserService;
 import cn.stylefeng.roses.core.base.controller.BaseController;
 import cn.stylefeng.roses.core.reqres.response.ResponseData;
+import cn.stylefeng.roses.core.util.SpringContextHolder;
 import cn.stylefeng.roses.core.util.ToolUtil;
 import cn.stylefeng.roses.kernel.model.exception.RequestEmptyException;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
@@ -41,6 +42,8 @@ import cn.stylefeng.roses.kernel.model.exception.enums.CoreExceptionEnum;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,10 +55,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+
+import static cn.stylefeng.guns.core.common.constant.cache.CacheKey.LOGIN_USER;
 
 /**
  * 通用控制器
@@ -88,7 +90,10 @@ public class SystemController extends BaseController {
      */
     @ApiOperation(value = "控制台")
     @RequestMapping("/console")
-    public String console() {
+    public String console(Model model) {
+        CacheManager cacheManager = SpringContextHolder.getBean(CacheManager.class);
+        Integer count = Optional.ofNullable(cacheManager.getCache(LOGIN_USER)).map(Cache::getSize).orElse(0);
+        model.addAttribute("count", count);
         return "/modular/frame/console.html";
     }
 
