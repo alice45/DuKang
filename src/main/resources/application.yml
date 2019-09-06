@@ -32,5 +32,5 @@ mybatis-plus:
   typeAliasesPackage: cn.stylefeng.guns.modular.system.model
   mapper-locations: classpath:cn/stylefeng/guns/modular/**/mapping/*.xml
 
-log:
-  path: guns-logs
+logging:
+  path: /home/guns-logs

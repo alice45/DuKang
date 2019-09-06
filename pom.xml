@@ -269,18 +269,18 @@
 
     <profiles>
         <profile>
-            <id>local</id>
+            <id>dev</id>
             <properties>
-                <spring.active>local</spring.active>
+                <spring.active>dev</spring.active>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
         <profile>
-            <id>dev</id>
+            <id>local</id>
             <properties>
-                <spring.active>dev</spring.active>
+                <spring.active>local</spring.active>
             </properties>
         </profile>
     </profiles>
