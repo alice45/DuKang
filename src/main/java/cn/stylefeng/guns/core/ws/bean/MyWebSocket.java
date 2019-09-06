@@ -1,32 +1,25 @@
 package cn.stylefeng.guns.core.ws.bean;
 
-import cn.stylefeng.guns.core.shiro.ShiroKit;
-import cn.stylefeng.guns.core.shiro.ShiroUser;
-import cn.stylefeng.guns.modular.system.entity.User;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
-import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Slf4j
 @ServerEndpoint(value = "/websocket") //接受websocket请求路径
 @Component
 public class MyWebSocket {
-
-//    public static final String URL = "http://i.xiaoi.com/robot/webrobot";
-
-//    public static final List<String> cookies = new ArrayList<>();
 
     //保存所有在线socket连接
     private static Map<String, MyWebSocket> webSocketMap = new LinkedHashMap<>();
@@ -38,13 +31,8 @@ public class MyWebSocket {
     private Session session;
 
 
-//    static {
-//        cookies.add("cnonce=808116;sig=0c3021aa5552fe597bb55448b40ad2a90d2dead5;XISESSIONID=hlbnd1oiwar01dfje825gavcn;nonce=273765;hibext_instdsigdip2=1;");
-//        cookies.add("sig=0c3021aa5552fe597bb55448b40ad2a90d2dead5");
-//        cookies.add("XISESSIONID=hlbnd1oiwar01dfje825gavcn");
-//        cookies.add("nonce=273765");
-//        cookies.add("hibext_instdsigdip2=1");
-//    }
+    private static ConcurrentHashMap<String, ConcurrentLinkedQueue<MsgReply>> MSG_QUEUE = new ConcurrentHashMap<>();
+
 
     //处理连接建立
     @OnOpen
@@ -52,8 +40,21 @@ public class MyWebSocket {
         this.session=session;
         String id = StringUtils.substringBetween(session.getUserPrincipal().getName(), "id=", ",");
         webSocketMap.put(id, this);
+        //消费滞留消息
         addCount();
         log.info("新的连接加入：{}",session.getId());
+    }
+
+    private void consumerMsg(String id) {
+        if (MSG_QUEUE.containsKey(id)) {
+            ConcurrentLinkedQueue<MsgReply> queue = MSG_QUEUE.get(id);
+            queue.stream().forEach(msg -> {
+                try {
+                    this.sendMessage(JSONObject.toJSONString(msg));
+                } catch (IOException e) {}
+            });
+            MSG_QUEUE.remove(id);
+        }
     }
 
     //接受消息
@@ -63,25 +64,29 @@ public class MyWebSocket {
         try{
             Msg msg = JSONObject.parseObject(message, Msg.class);
             String targetId = msg.getTo().getId();
+            MsgReply msgReply = MsgReply.reply(msg);
             MyWebSocket socket = webSocketMap.get(targetId);
-            socket.sendMessage(JSONObject.toJSONString(MsgReply.reply(msg)));
+            if (socket == null) {
+                stashMsg(msgReply);
+            }else {
+                socket.sendMessage(JSONObject.toJSONString(msgReply));
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    private String getReply(String message) {
-//        Map<String, Object> param = new HashMap<>(8);
-//        String data = "{'sessionId':'09e2aca4d0a541f88eecc77c03a8b393','robotId':'webbot','userId':'462d49d3742745bb98f7538c42f9f874','body':{'content':'" + message + "'}," + "'type':'txt'}";
-//        param.put("callback", "__webrobot_processMsg");
-//        param.put("data", data);
-//        param.put("ts", "1529917589648");
-//        try {
-//            String s = HttpClientUtils.get(URL, param, obtainHeader());
-//        } catch (Exception e) {
-//            log.info("调用回复接口错误", e);
-//        }
-        return "嗷哦~";
+    private void stashMsg(MsgReply reply) {
+        String targetId = reply.getTargetId();
+        MSG_QUEUE.computeIfPresent(targetId, (k, v) -> {
+            v.add(reply);
+            return v;
+        });
+        if (!MSG_QUEUE.containsKey(targetId)) {
+            ConcurrentLinkedQueue<MsgReply> queue = new ConcurrentLinkedQueue<>();
+            queue.add(reply);
+            MSG_QUEUE.put(targetId, queue);
+        }
     }
 
     private Header[] obtainHeader() {
@@ -108,8 +113,6 @@ public class MyWebSocket {
         reduceCount();
         log.info("连接关闭:{}",this.session.getId());
     }
-
-    //群发消息
 
     //发送消息
     public void sendMessage(String message) throws IOException {

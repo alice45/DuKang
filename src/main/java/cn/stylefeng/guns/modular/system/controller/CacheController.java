@@ -32,6 +32,7 @@ public class CacheController extends BaseController {
         Optional.ofNullable(authenticationInfo).orElseThrow(() -> new ServiceException(USER_ERROR_LOGIN_OUT));
         String userKey = String.valueOf(authenticationInfo.getCredentials());
         CacheUtil.remove(LOGIN_USER, userKey);
+        ShiroKit.getSubject().logout();
         return SimpleResponse.successJson();
     }
 
