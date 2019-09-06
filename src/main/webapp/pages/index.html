@@ -159,7 +159,7 @@
             console.log(ev);
         };
         socket.onopen = function (ev) {
-            console.log(ev);
+            console.log('连接开启');
         };
         socket.onmessage = function (ev) {
             var data = ev.data.split(":");
