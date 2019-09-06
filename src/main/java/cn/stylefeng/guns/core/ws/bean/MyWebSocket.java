@@ -63,11 +63,8 @@ public class MyWebSocket {
         try{
             Msg msg = JSONObject.parseObject(message, Msg.class);
             String targetId = msg.getTo().getId();
-            String name = msg.getTo().getUsername();
-            String sourceId = msg.getMine().getId();
-            String content = msg.getMine().getContent();
             MyWebSocket socket = webSocketMap.get(targetId);
-            socket.sendMessage(targetId+":"+sourceId+":"+content + ":" + name);
+            socket.sendMessage(JSONObject.toJSONString(MsgReply.reply(msg)));
         }catch (Exception e){
             e.printStackTrace();
         }
