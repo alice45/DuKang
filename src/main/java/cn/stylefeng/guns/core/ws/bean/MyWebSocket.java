@@ -40,6 +40,7 @@ public class MyWebSocket {
         String id = StringUtils.substringBetween(session.getUserPrincipal().getName(), "id=", ",");
         webSocketMap.put(id, this);
         //消费滞留消息
+        consumerMsg(id);
         addCount();
         log.info("新的连接加入：{}",session.getId());
     }
@@ -63,15 +64,29 @@ public class MyWebSocket {
         try{
             Msg msg = JSONObject.parseObject(message, Msg.class);
             String targetId = msg.getTo().getId();
-            MsgReply msgReply = MsgReply.reply(msg);
-            MyWebSocket socket = webSocketMap.get(targetId);
-            if (socket == null) {
-                stashMsg(msgReply);
+            if ("-1".equals(targetId)) {
+                rotConnect(msg);
             }else {
-                socket.sendMessage(JSONObject.toJSONString(msgReply));
+                userConnect(msg);
             }
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void rotConnect(Msg msg) throws Exception{
+        String content = Rob.getMsg(msg.getMine().getContent());
+        this.sendMessage(JSONObject.toJSONString(MsgReply.rotReply(content)));
+    }
+
+    private void userConnect(Msg msg) throws Exception{
+        String targetId = msg.getTo().getId();
+        MsgReply msgReply = MsgReply.reply(msg);
+        MyWebSocket socket = webSocketMap.get(targetId);
+        if (socket == null) {
+            stashMsg(msgReply);
+        }else {
+            socket.sendMessage(JSONObject.toJSONString(msgReply));
         }
     }
 
@@ -86,16 +101,6 @@ public class MyWebSocket {
             queue.add(reply);
             MSG_QUEUE.put(targetId, queue);
         }
-    }
-
-    private Header[] obtainHeader() {
-        return HttpHeader.custom()
-                .other("cnonce", "808116")
-                .other("sig", "0c3021aa5552fe597bb55448b40ad2a90d2dead5")
-                .other("XISESSIONID", "hlbnd1oiwar01dfje825gavcn")
-                .other("nonce", "273765")
-                .other("hibext_instdsigdip2", "1")
-                .build();
     }
 
     //处理错误

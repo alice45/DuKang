@@ -1,5 +1,6 @@
 package cn.stylefeng.guns.core.ws.bean;
 
+import cn.stylefeng.guns.modular.system.entity.MsgUser;
 import lombok.*;
 
 @Data
@@ -31,6 +32,17 @@ public class MsgReply {
                 sourceId(sourceId).
                 content(content).
                 avatar(avatar).
+                build();
+    }
+
+    public static MsgReply rotReply(String content) {
+        MsgUser.FriendBean.ListBean rotInfo = MsgUser.rotInfo();
+        return MsgReply.builder().
+                targetId(String.valueOf(rotInfo.getId())).
+                name(rotInfo.getUsername()).
+                sourceId(String.valueOf(rotInfo.getId())).
+                content(content).
+                avatar(rotInfo.getAvatar()).
                 build();
     }
 }

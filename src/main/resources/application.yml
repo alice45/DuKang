@@ -34,3 +34,6 @@ mybatis-plus:
 
 logging:
   path: /home/guns-logs
+
+rot:
+  url: http://i.itpk.cn/api.php?api_key=3017c6a4f6175671271503d931f1c505&api_secret=ravhlzcud7lg&question=
