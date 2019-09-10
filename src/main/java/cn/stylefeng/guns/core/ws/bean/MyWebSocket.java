@@ -1,10 +1,8 @@
 package cn.stylefeng.guns.core.ws.bean;
 
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.common.HttpHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -77,6 +75,7 @@ public class MyWebSocket {
     private void rotConnect(Msg msg) throws Exception{
         String content = Rob.getMsg(msg.getMine().getContent());
         this.sendMessage(JSONObject.toJSONString(MsgReply.rotReply(content)));
+        log.info("rot回复:{}", content);
     }
 
     private void userConnect(Msg msg) throws Exception{
