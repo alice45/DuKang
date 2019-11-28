@@ -18,9 +18,9 @@
 			<section class="content bgcolor-4">
 				<h2>解密</h2>
 				<span class="input input--kuro">
-					<input class="input__field input__field--kuro" type="text" id="input-7" />
+					<input class="input__field input__field--kuro" type="text" id="input-7" oninput="decrypt(this.value)"/>
 					<label class="input__label input__label--kuro" for="input-7">
-						<span class="input__label-content input__label-content--kuro">XXX</span>
+						<span class="input__label-content input__label-content--kuro">key</span>
 					</label>
 				</span>
 				<!--<span class="input input&#45;&#45;kuro">-->
@@ -47,6 +47,7 @@
 			</section>
 		</div><!-- /container -->
 		<script src="/assets/common/js/classie.js"></script>
+        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
 		<script>
 			(function() {
 				// trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
@@ -81,6 +82,16 @@
 					}
 				}
 			})();
+			
+			
+			function decrypt(key) {
+                if (key == undefined || key.trim().length < 1) {
+                    return
+                }
+                $.get('/funs/decryptKey',{'content':key}, function (res) {
+                    $('#input-19').val(res)
+                })
+            }
 		</script>
 	</body>
 </html>

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Optional;
+
 
 @Controller
 @RequestMapping("/funs")
@@ -52,9 +54,18 @@ public class FunsController extends BaseController {
     @RequestMapping("/decrypt")
     public ModelAndView decrypt() {
         ModelAndView mv = new ModelAndView("input.html");
-
         return mv;
     }
+
+    @RequestMapping("/decryptKey")
+    @ResponseBody
+    public String decryptKey(String content) {
+        if (Strings.isEmpty(content)) {
+            return "空的~解密啥哪";
+        }
+        return Optional.ofNullable(DESEncrypt.decrypt(content)).orElse("啥都没有，是不是整错了");
+    }
+
 
     @RequestMapping(value = "/list")
     @Permission
