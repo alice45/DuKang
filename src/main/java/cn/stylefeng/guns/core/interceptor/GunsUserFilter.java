@@ -28,6 +28,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static cn.stylefeng.guns.core.common.constant.JwtConstants.AUTH_PATH;
+
 /**
  * Filter that allows access to resources if the accessor is a known user, which is defined as
  * having a known principal.  This means that any user who is authenticated or remembered via a
@@ -53,7 +55,9 @@ public class GunsUserFilter extends AccessControlFilter {
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         if (isLoginRequest(request, response)) {
             return true;
-        } else {
+        } else if(((HttpServletRequest) request).getServletPath().equals(AUTH_PATH)) {
+            return true;
+        }else {
             Subject subject = getSubject(request, response);
             // If principal is not null, then the user is known and should be allowed access.
             return subject.getPrincipal() != null;
