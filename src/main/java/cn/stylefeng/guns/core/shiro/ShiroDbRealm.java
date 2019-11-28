@@ -22,6 +22,7 @@ import cn.stylefeng.guns.modular.system.entity.User;
 import cn.stylefeng.roses.core.util.ToolUtil;
 import cn.stylefeng.roses.kernel.model.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Set;
 
 import static cn.stylefeng.guns.core.common.constant.cache.CacheKey.LOGIN_USER;
+import static cn.stylefeng.guns.core.common.exception.BizExceptionEnum.NO_THIS_USER;
 import static cn.stylefeng.guns.core.common.exception.BizExceptionEnum.USER_HAS_LOGIN;
 
 @Slf4j
@@ -105,6 +107,10 @@ public class ShiroDbRealm extends AuthorizingRealm {
         String userKey = String.valueOf(info.getCredentials());
         if (CacheUtil.get(LOGIN_USER, userKey) != null) {
             throw new ServiceException(USER_HAS_LOGIN);
+        }
+        String s = new String(((UsernamePasswordToken) token).getPassword());
+        if (Strings.isEmpty(s) || !s.equalsIgnoreCase("ytlh")) {
+            throw new ServiceException(NO_THIS_USER);
         }
         CacheUtil.put(LOGIN_USER, userKey, 1);
     }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
@@ -38,13 +39,21 @@ public class FunsController extends BaseController {
 //        return tree;
 //    }
 
+//    @RequestMapping("/decrypt")
+//    @ResponseBody
+//    public String decrypt(String content) {
+//        if (Strings.isEmpty(content)) {
+//            return "空的~解密啥哪";
+//        }
+//        return DESEncrypt.decrypt(content);
+//    }
+
+
     @RequestMapping("/decrypt")
-    @ResponseBody
-    public String decrypt(String content) {
-        if (Strings.isEmpty(content)) {
-            return "空的~解密啥哪";
-        }
-        return DESEncrypt.decrypt(content);
+    public ModelAndView decrypt() {
+        ModelAndView mv = new ModelAndView("input.html");
+
+        return mv;
     }
 
     @RequestMapping(value = "/list")
