@@ -29,6 +29,6 @@ public interface JwtConstants {
 
     Long EXPIRATION = 604800L;
 
-    String AUTH_PATH = "/funs/decrypt";
+    String AUTH_PATH = "/funs";
 
 }

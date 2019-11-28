@@ -50,7 +50,7 @@ public class AttributeSetInteceptor extends HandlerInterceptorAdapter {
         ShiroUser user = ShiroKit.getUser();
 
         if (user == null) {
-            throw new AuthenticationException("当前没有登录账号！");
+//            throw new AuthenticationException("当前没有登录账号！");
         } else {
             modelAndView.addObject("name", user.getName());
             modelAndView.addObject("avatar", DefaultImages.defaultAvatarUrl());
