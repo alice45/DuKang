@@ -9,90 +9,124 @@
 		<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" type="text/css" href="/assets/common/css/demo.css" />
 		<link rel="stylesheet" type="text/css" href="/assets/common/css/component.css" />
+		<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+		<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+		<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+		<script src="https://cdn.bootcss.com/twitter-bootstrap/2.3.1/js/bootstrap-tab.js"></script>
 		<!--[if IE]>
   		<script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
 		<![endif]-->
 	</head>
 	<body>
-		<div class="container">
-			<section class="content bgcolor-4">
-				<h2>解密</h2>
-				<span class="input input--kuro">
+
+	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+		<!-- Brand/logo -->
+		<a class="navbar-brand" href="#">
+			<img src="http://q0n3aed16.bkt.clouddn.com/2019-11-30-14-27-57.png" alt="logo" style="width:50px;border-radius:25px">
+		</a>
+
+		<!-- Links -->
+		<ul class="navbar-nav">
+			<li class="nav-item">
+				<a class="nav-link" href="#tab1" data-toggle="tab">Excel</a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+					Work
+				</a>
+				<div class="dropdown-menu">
+					<a class="dropdown-item" href="#tab2" data-toggle="tab">网关解密</a>
+				</div>
+			</li>
+		</ul>
+	</nav>
+
+	<div class="container-fluid">
+		 <div class="tab-content">
+		    <div class="tab-pane active " id="tab1">
+		     
+		    </div>
+		    <div class="tab-pane" id="tab2">
+		      <div class="container">
+		<section class="content bgcolor-4">
+			<h2>解密</h2>
+			<span class="input input--kuro">
 					<input class="input__field input__field--kuro" type="text" id="input-7" oninput="decrypt(this.value)"/>
 					<label class="input__label input__label--kuro" for="input-7">
 						<span class="input__label-content input__label-content--kuro">key</span>
 					</label>
 				</span>
-				<!--<span class="input input&#45;&#45;kuro">-->
-					<!--<input class="input__field input__field&#45;&#45;kuro" type="text" id="input-8" />-->
-					<!--<label class="input__label input__label&#45;&#45;kuro" for="input-8">-->
-						<!--<span class="input__label-content input__label-content&#45;&#45;kuro">Website</span>-->
-					<!--</label>-->
-				<!--</span>-->
-				<!--<span class="input input&#45;&#45;kuro">-->
-					<!--<input class="input__field input__field&#45;&#45;kuro" type="text" id="input-9" />-->
-					<!--<label class="input__label input__label&#45;&#45;kuro" for="input-9">-->
-						<!--<span class="input__label-content input__label-content&#45;&#45;kuro">Invitation Code</span>-->
-					<!--</label>-->
-				<!--</span>-->
-			</section>
-			<section class="content bgcolor-3">
-				<h2>JSON</h2>
-				<span class="input input--kyo">
-					<input class="input__field input__field--kyo" type="text" id="input-19" />
+		</section>
+		<section class="content bgcolor-3">
+			<h2>JSON</h2>
+			<span class="input input--kyo">
+					<input class="input__field input__field--kyo" type="text" id="input-19" onclick="copyTxt(this)"/>
 					<label class="input__label input__label--kyo" for="input-19">
-						<!--<span class="input__label-content input__label-content&#45;&#45;kyo">What's your email?</span>-->
 					</label>
 				</span>
-			</section>
-		</div><!-- /container -->
-		<script src="/assets/common/js/classie.js"></script>
-        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
-		<script>
+		</section>
+	</div><!-- /解密 -->
+		    </div>
+		  </div>
+	</div>
+
+
+<script src="/assets/common/js/classie.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script>
+	(function() {
+		// trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+		if (!String.prototype.trim) {
 			(function() {
-				// trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
-				if (!String.prototype.trim) {
-					(function() {
-						// Make sure we trim BOM and NBSP
-						var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
-						String.prototype.trim = function() {
-							return this.replace(rtrim, '');
-						};
-					})();
-				}
-
-				[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
-					// in case the input is already filled..
-					if( inputEl.value.trim() !== '' ) {
-						classie.add( inputEl.parentNode, 'input--filled' );
-					}
-
-					// events:
-					inputEl.addEventListener( 'focus', onInputFocus );
-					inputEl.addEventListener( 'blur', onInputBlur );
-				} );
-
-				function onInputFocus( ev ) {
-					classie.add( ev.target.parentNode, 'input--filled' );
-				}
-
-				function onInputBlur( ev ) {
-					if( ev.target.value.trim() === '' ) {
-						classie.remove( ev.target.parentNode, 'input--filled' );
-					}
-				}
+				// Make sure we trim BOM and NBSP
+				var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+				String.prototype.trim = function() {
+					return this.replace(rtrim, '');
+				};
 			})();
-			
-			
-			function decrypt(key) {
-                if (key == undefined || key.trim().length < 1) {
-                    $('#input-19').val('')
-                    return
-                }
-                $.get('/funs/decryptKey',{'content':key}, function (res) {
-                    $('#input-19').val(res)
-                })
-            }
-		</script>
+		}
+
+		[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+			// in case the input is already filled..
+			if( inputEl.value.trim() !== '' ) {
+				classie.add( inputEl.parentNode, 'input--filled' );
+			}
+
+			// events:
+			inputEl.addEventListener( 'focus', onInputFocus );
+			inputEl.addEventListener( 'blur', onInputBlur );
+		} );
+
+		function onInputFocus( ev ) {
+			classie.add( ev.target.parentNode, 'input--filled' );
+		}
+
+		function onInputBlur( ev ) {
+			if( ev.target.value.trim() === '' ) {
+				classie.remove( ev.target.parentNode, 'input--filled' );
+			}
+		}
+	})();
+
+
+	function decrypt(key) {
+        if (key == undefined || key.trim().length < 1) {
+            $('#input-19').val('')
+            return
+        }
+        $.get('/funs/decryptKey',{'content':key}, function (res) {
+            $('#input-19').val(res)
+        })
+    }
+
+    function copyTxt(obj) {
+		if ($(obj).val() == undefined || $(obj).val().trim().length < 1) {
+		    return
+		}
+        $(obj).select();
+        document.execCommand("copy");
+    }
+</script>
 	</body>
 </html>
