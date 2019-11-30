@@ -22,21 +22,21 @@
 
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 		<!-- Brand/logo -->
-		<a class="navbar-brand" href="#">
+		<a class="navbar-brand" href="#index">
 			<img src="http://q0n3aed16.bkt.clouddn.com/2019-11-30-14-27-57.png" alt="logo" style="width:50px;border-radius:25px">
 		</a>
 
 		<!-- Links -->
 		<ul class="navbar-nav">
 			<li class="nav-item">
-				<a class="nav-link" href="#tab1" data-toggle="tab">Excel</a>
+				<a class="nav-link" href="#excel" data-toggle="tab">Excel</a>
 			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
 					Work
 				</a>
 				<div class="dropdown-menu">
-					<a class="dropdown-item" href="#tab2" data-toggle="tab">网关解密</a>
+					<a class="dropdown-item" href="#wg" data-toggle="tab">网关解密</a>
 				</div>
 			</li>
 		</ul>
@@ -44,29 +44,37 @@
 
 	<div class="container-fluid">
 		 <div class="tab-content">
-		    <div class="tab-pane active " id="tab1">
-		     
+				<div class="tab-pane  active" id="index">
+					<p class="container">Hello~</p>
+				</div>
+		    <div class="tab-pane" id="excel">
+					<div class="container">
+					    <form enctype="multipart/form-data">
+									<input type="file" name="files">
+									<input type="submit" value="提交">
+							</form>
+					</div>
 		    </div>
-		    <div class="tab-pane" id="tab2">
+		    <div class="tab-pane" id="wg">
 		      <div class="container">
-		<section class="content bgcolor-4">
-			<h2>解密</h2>
-			<span class="input input--kuro">
-					<input class="input__field input__field--kuro" type="text" id="input-7" oninput="decrypt(this.value)"/>
-					<label class="input__label input__label--kuro" for="input-7">
-						<span class="input__label-content input__label-content--kuro">key</span>
-					</label>
-				</span>
-		</section>
-		<section class="content bgcolor-3">
-			<h2>JSON</h2>
-			<span class="input input--kyo">
-					<input class="input__field input__field--kyo" type="text" id="input-19" onclick="copyTxt(this)"/>
-					<label class="input__label input__label--kyo" for="input-19">
-					</label>
-				</span>
-		</section>
-	</div><!-- /解密 -->
+						<section class="content bgcolor-4">
+							<h2>解密</h2>
+							<span class="input input--kuro">
+									<input class="input__field input__field--kuro" type="text" id="input-7" oninput="decrypt(this.value)"/>
+									<label class="input__label input__label--kuro" for="input-7">
+										<span class="input__label-content input__label-content--kuro">key</span>
+									</label>
+								</span>
+						</section>
+						<section class="content bgcolor-3">
+							<h2>JSON</h2>
+							<span class="input input--kyo">
+									<input class="input__field input__field--kyo" type="text" id="input-19" onclick="copyTxt(this)"/>
+									<label class="input__label input__label--kyo" for="input-19">
+									</label>
+								</span>
+						</section>
+					</div><!-- /解密 -->
 		    </div>
 		  </div>
 	</div>
