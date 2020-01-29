@@ -16,6 +16,8 @@
 		<script src="https://cdn.bootcss.com/twitter-bootstrap/2.3.1/js/bootstrap-tab.js"></script>
 		<!--[if IE]>
   		<script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
+		<link href="https://cdn.bootcss.com/video.js/7.6.5/alt/video-js-cdn.css" rel="stylesheet">
+		<script src="https://cdn.bootcss.com/video.js/7.6.5/lang/zh-CN.js"></script>
 		<![endif]-->
 	</head>
 	<body>
@@ -31,6 +33,9 @@
 			<li class="nav-item">
 				<a class="nav-link" href="#excel" data-toggle="tab">Excel</a>
 			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#movie" data-toggle="tab">Movie</a>
+			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
 					Work
@@ -44,8 +49,24 @@
 
 	<div class="container-fluid">
 		 <div class="tab-content">
-				<div class="tab-pane  active" id="index">
+				<div class="tab-pane  active" id="index" style="child-align: middle">
 					<p class="container">Hello~</p>
+					<video
+							id="my-player"
+							class="video-js"
+							controls
+							preload="auto"
+							poster="/assets/common/images/head.png"
+							data-setup='{}'
+							style="">
+						<source src="/assets/movie/jsc.mp4" type="video/mp4"></source>
+						<p class="vjs-no-js">
+							寄生虫
+							<a href="https://videojs.com/html5-video-support/" target="_blank">
+								supports HTML5 video
+							</a>
+						</p>
+					</video>
 				</div>
 		    <div class="tab-pane" id="excel">
 					<div class="container">
@@ -76,6 +97,26 @@
 						</section>
 					</div><!-- /解密 -->
 		    </div>
+			<!--电影-->
+			<div  class="tab-pane" id="movie">
+				<div class="container">
+					<video
+							id="my-player1"
+							class="video-js"
+							controls
+							preload="auto"
+							poster="/assets/common/images/head.png"
+							data-setup='{}'>
+						<source src="/assets/movie/jsc.mp4" type="video/mp4"></source>
+						<p class="vjs-no-js">
+							寄生虫
+							<a href="https://videojs.com/html5-video-support/" target="_blank">
+								supports HTML5 video
+							</a>
+						</p>
+					</video>
+				</div>
+			</div>
 		  </div>
 	</div>
 
